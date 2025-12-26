@@ -1,1 +1,302 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto kalkulačka</title>
+
+<style>
+/* ====== GLOBAL ====== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 30px 15px 60px;
+    color: #222;
+}
+
+/* ====== WRAPPER ====== */
+.app {
+    width: 100%;
+    max-width: 480px;
+}
+
+/* ====== APP TITLE ====== */
+.appTitle {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 5px;
+    text-shadow: 0 3px 8px rgba(0,0,0,0.35);
+    letter-spacing: 0.5px;
+    animation: fadeIn 0.6s ease;
+}
+
+/* ====== HEADER ====== */
+h2 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: white;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    animation: fadeIn 0.6s ease;
+}
+
+/* ====== CARD ====== */
+.box {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 22px;
+    margin-top: 20px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    animation: slideUp 0.5s ease;
+}
+
+/* ====== SECTION TITLES ====== */
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.blue { background: #0078ff; }
+.green { background: #00b36b; }
+.orange { background: #ff9800; }
+.red { background: #e53935; }
+
+/* ====== LABELS & INPUTS ====== */
+label {
+    font-weight: 600;
+    margin-top: 12px;
+    display: block;
+    color: #333;
+}
+
+.inputWrap {
+    position: relative;
+}
+
+.inputWrap span {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.55;
+    font-size: 18px;
+}
+
+input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    margin-top: 6px;
+    font-size: 16px;
+    border: 1px solid #bbb;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.2s;
+    background: rgba(255,255,255,0.9);
+}
+
+input:focus {
+    border-color: #0078ff;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,120,255,0.15);
+}
+
+/* ====== BUTTON ====== */
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 25px;
+    background: linear-gradient(135deg, #0078ff, #005fcc);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,120,255,0.25);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* ====== RESULT ====== */
+#vysledok {
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.result-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.result-line:nth-child(odd) {
+    background: rgba(0,0,0,0.05);
+}
+
+.result-line:nth-child(even) {
+    background: rgba(0,0,0,0.08);
+}
+
+.result-total {
+    font-size: 24px;
+    font-weight: 800;
+    margin-top: 18px;
+    text-align: center;
+    color: #0044aa;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ====== FOOTER ====== */
+.footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    opacity: 0.75;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* ====== ANIMATIONS ====== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1 class="appTitle">Auto kalkulačka</h1>
+<h2>Kalkulačka nákladov auta</h2>
+
+<div class="box">
+
+    <div class="sectionTitle blue">Palivo</div>
+    <label>Spotreba (l/100 km):</label>
+    <div class="inputWrap"><span>⛽</span><input id="spotreba" type="number" step="0.1"></div>
+
+    <label>Cena paliva (€/l):</label>
+    <div class="inputWrap"><span>💶</span><input id="cenaPaliva" type="number" step="0.01"></div>
+
+    <div class="sectionTitle green">Servis & Pneumatiky</div>
+    <label>Ročné náklady na servis (€):</label>
+    <div class="inputWrap"><span>🔧</span><input id="servis" type="number"></div>
+
+    <label>Cena sady pneumatík (€):</label>
+    <div class="inputWrap"><span>🛞</span><input id="pneuCena" type="number"></div>
+
+    <label>Životnosť pneumatík (km):</label>
+    <div class="inputWrap"><span>📏</span><input id="pneuZivot" type="number"></div>
+
+    <div class="sectionTitle orange">Poistky & Nájazd</div>
+    <label>Ročné poistky (€):</label>
+    <div class="inputWrap"><span>🛡️</span><input id="poistky" type="number"></div>
+
+    <label>Ročný nájazd (km):</label>
+    <div class="inputWrap"><span>📍</span><input id="najazd" type="number"></div>
+
+    <div class="sectionTitle red">Amortizácia</div>
+    <label>Nadobúdacia cena auta (€):</label>
+    <div class="inputWrap"><span>🚗</span><input id="kupna" type="number"></div>
+
+    <label>Predajná cena po výmene (€):</label>
+    <div class="inputWrap"><span>🔁</span><input id="predajna" type="number"></div>
+
+    <label>Doba používania auta (roky):</label>
+    <div class="inputWrap"><span>⏳</span><input id="rokyPouzivania" type="number"></div>
+
+    <button onclick="vypocitaj()">Vypočítať</button>
+</div>
+
+<div id="vysledok" class="box"></div>
+
+<div class="footer">(c) 2025 Peter Lukáč</div>
+</div>
+
+<script>
+function toNumber(v) {
+    const n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+}
+
+function vypocitaj() {
+
+    const vSpotreba = toNumber(document.getElementById("spotreba").value);
+    const vCenaPaliva = toNumber(document.getElementById("cenaPaliva").value);
+    const vServis = toNumber(document.getElementById("servis").value);
+    const vNajazd = toNumber(document.getElementById("najazd").value);
+    const vPneuCena = toNumber(document.getElementById("pneuCena").value);
+    const vPneuZivot = toNumber(document.getElementById("pneuZivot").value);
+    const vPoistky = toNumber(document.getElementById("poistky").value);
+    const vKupna = toNumber(document.getElementById("kupna").value);
+    const vPredajna = toNumber(document.getElementById("predajna").value);
+    const vRoky = toNumber(document.getElementById("rokyPouzivania").value);
+
+    const out = document.getElementById("vysledok");
+
+    if (vNajazd <= 0 || vPneuZivot <= 0 || vRoky <= 0) {
+        out.innerHTML = "<b style='color:#b00020;'>Skontroluj vstupy – niektoré hodnoty sú 0.</b>";
+        return;
+    }
+
+    const palivoKm = (vSpotreba / 100) * vCenaPaliva;
+    const servisKm = vServis / vNajazd;
+    const pneuKm = vPneuCena / vPneuZivot;
+    const poistkyKm = vPoistky / vNajazd;
+
+    const celkovyNajazd = vNajazd * vRoky;
+    const amortKm = (vKupna - vPredajna) / celkovyNajazd;
+
+    const celkom = palivoKm + servisKm + pneuKm + poistkyKm + amortKm;
+
+    out.innerHTML = `
+        <div class="result-line"><span>Palivo:</span><span>${palivoKm.toFixed(3)} €/km</span></div>
+        <div class="result-line"><span>Servis:</span><span>${servisKm.toFixed(3)} €/km</span></div>
+        <div class="result-line"><span>Pneumatiky:</span><span>${pneuKm.toFixed(3)} €/km</span></div>
+        <div class="result-line"><span>Poistky:</span><span>${poistkyKm.toFixed(3)} €/km</span></div>
+        <div class="result-line"><span>Amortizácia:</span><span>${amortKm.toFixed(3)} €/km</span></div>
+
+        <div class="result-total">CELKOM: ${celkom.toFixed(3)} €/km</div>
+    `;
+}
+</script>
+
+</body>
+</html>
 
